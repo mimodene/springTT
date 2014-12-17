@@ -1,9 +1,10 @@
 import acp.ApplicationContextProvider;
-import addremovebean.AddRemoveConfig;
 import addremovebean.TestAddRemove;
 import config.Doer;
 import config.Dosomething;
 import config.NotDoer;
+import jobexec.ComplexInvokerConfig;
+import jobexec.SimpleInvokerConfig;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import scheduler.ScheduledDoer;
@@ -20,11 +21,27 @@ public class Starter {
     }
 
     private void go() {
-        ApplicationContext ctx = ApplicationContextProvider.getApplicationContext(AddRemoveConfig.class);
-//        testBasic(ctx);
-//        testDynamic(ctx);
-        testAddRemove();
+        //  ApplicationContext ctx = ApplicationContextProvider.getApplicationContext(AddRemoveConfig.class);
+
+        ApplicationContext ctx = ApplicationContextProvider.getApplicationContext(ComplexInvokerConfig.class, SimpleInvokerConfig.class
+                                                                                 );
+
+        testParallel();
+
+        //   testBasic(ctx);
+        //   testDynamic(ctx);
+        //   testAddRemove();
         ((ConfigurableApplicationContext) ctx).close();
+    }
+
+    private void testParallel() {
+
+        try {
+            Thread.sleep(16000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void testAddRemove() {

@@ -1,6 +1,6 @@
 package jobexec;
 
-import jobexec.worker.WorkerClass;
+import jobexec.worker.Worker;
 import org.quartz.Scheduler;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
@@ -10,8 +10,16 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 public class IPCExecutor {
 
     private ThreadPoolTaskExecutor executor;
-    private WorkerClass workerclass;
+    private Worker workerclass;
     private Scheduler scheduler;
+
+
+    public void startAll(){
+
+    }
+    public void stopAll(){
+        executor.shutdown();
+    }
 
     public ThreadPoolTaskExecutor getExecutor() {
         return executor;
@@ -21,11 +29,11 @@ public class IPCExecutor {
         this.executor = executor;
     }
 
-    public WorkerClass getWorkerclass() {
+    public Worker getWorkerclass() {
         return workerclass;
     }
 
-    public void setWorkerclass(final WorkerClass workerclass) {
+    public void setWorkerclass(final Worker workerclass) {
         this.workerclass = workerclass;
     }
 
