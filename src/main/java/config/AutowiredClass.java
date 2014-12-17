@@ -12,10 +12,9 @@ public class AutowiredClass implements Dosomething {
     @Autowired
     private Innerautowired innerAutowired;
 
-
     @Override
     public void go() {
-        System.out.println("calling autowiredclass from : "+ toString());
+        System.out.println("AutowiredClass go : " + toString());
         innerAutowired.sayThis();
     }
 }

@@ -1,5 +1,7 @@
 package config;
 
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.stereotype.Component;
 
 /**
@@ -7,10 +9,15 @@ import org.springframework.stereotype.Component;
  */
 
 @Component
-public class NotDoer implements Dosomething {
+public class NotDoer implements Dosomething  , ApplicationListener<ContextClosedEvent> {
 
     @Override
     public void go() {
         System.out.println("not doing anything: " + toString());
+    }
+
+    @Override
+    public void onApplicationEvent(final ContextClosedEvent contextClosedEvent) {
+        System.out.println("--------Shutdown the NotDoer: " + toString());
     }
 }

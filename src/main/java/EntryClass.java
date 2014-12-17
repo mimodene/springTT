@@ -1,9 +1,9 @@
+import acp.ApplicationContextProvider;
 import config.AutowiredClass;
 import config.Doer;
 import config.Dosomething;
 import config.NotDoer;
 import org.springframework.context.ApplicationContext;
-import provider.ApplicationContextProvider;
 
 /**
  * Created by MMO on 12.12.2014.

@@ -12,9 +12,8 @@ public class Doer implements Dosomething {
     @Autowired
     AutowiredClass auto;
 
-
     public void go() {
-        System.out.println("real doer: " + toString());
+        System.out.println("Doer go: " + toString());
         auto.go();
     }
 }

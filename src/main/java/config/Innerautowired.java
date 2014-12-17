@@ -9,7 +9,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class Innerautowired {
 
-    public void sayThis(){
-        System.out.println(" this is the inner voice speaking: "+ toString());
+    private PlainDoer plainDoer = new PlainDoer();
+
+    public void sayThis() {
+        System.out.println("Innerdoer sayThis: " + toString());
+        plainDoer.doSomeThing();
     }
 }
