@@ -18,18 +18,10 @@ public class SoftwareConfiguration {
     CronTriggerFactoryBean cronTriggerFB = (CronTriggerFactoryBean) ctx.getBean("cronTriggerFactoryBean");
     CronTrigger trigger = cronTriggerFB.getObject();
 
-
     JobDoSomething job = (JobDoSomething) ctx.getBean("jobDoSomething");
 
-
-    ThreadPoolTaskExecutor taskExecutor =(ThreadPoolTaskExecutor) ctx.getBean("threadPoolTaskExecutor");
+    ThreadPoolTaskExecutor taskExecutor = (ThreadPoolTaskExecutor) ctx.getBean("threadPoolTaskExecutor");
     CronTrigger cronTrigger = new CronTriggerImpl();
-
-
-
-
-
-
 
     //    //get the task to run or it could have been injected
     //    DataPollingTask dpTask = (DataPollingTask) ctx.getBean(taskName);

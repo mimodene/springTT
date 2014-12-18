@@ -3,10 +3,9 @@ import addremovebean.TestAddRemove;
 import config.Doer;
 import config.Dosomething;
 import config.NotDoer;
-import jobexec.ComplexInvokerConfig;
-import jobexec.SimpleInvokerConfig;
+import gui.MainFrame;
+import jobexec.PureQuartzConfig;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ConfigurableApplicationContext;
 import scheduler.ScheduledDoer;
 
 /**
@@ -17,30 +16,29 @@ public class Starter {
 
     public static void main(String args[]) {
         Starter start = new Starter();
+        final MainFrame mainFrame = new MainFrame();
+
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                mainFrame.setVisible(true);
+            }
+        });
+
         start.go();
+
     }
 
     private void go() {
-        //  ApplicationContext ctx = ApplicationContextProvider.getApplicationContext(AddRemoveConfig.class);
-
-        ApplicationContext ctx = ApplicationContextProvider.getApplicationContext(ComplexInvokerConfig.class, SimpleInvokerConfig.class
-                                                                                 );
+        ApplicationContext ctx = ApplicationContextProvider.getApplicationContext(PureQuartzConfig.class);
 
         testParallel();
-
         //   testBasic(ctx);
         //   testDynamic(ctx);
         //   testAddRemove();
-        ((ConfigurableApplicationContext) ctx).close();
+//        ((ConfigurableApplicationContext) ctx).close();
     }
 
     private void testParallel() {
-
-        try {
-            Thread.sleep(16000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
     }
 
@@ -59,29 +57,11 @@ public class Starter {
     }
 
     private void testDynamic(ApplicationContext ctx) {
-        try {
-            Thread.sleep(8000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
         ScheduledDoer doer = ctx.getBean(ScheduledDoer.class);
-
         doer.getController().status = 1;
 
-        try {
-            Thread.sleep(11000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         doer.getController().status = 0;
-        try {
-            Thread.sleep(8000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
     }
-
 }

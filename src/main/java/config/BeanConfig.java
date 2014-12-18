@@ -1,6 +1,5 @@
 package config;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
@@ -15,9 +14,9 @@ public class BeanConfig {
     //    public Dosomething doer(){
     //        return new Doer();
     //    }
-//        @Bean
-//        public Dosomething fakedoer(){
-//            return new NotDoer();
-//        }
+    //        @Bean
+    //        public Dosomething fakedoer(){
+    //            return new NotDoer();
+    //        }
 
 }

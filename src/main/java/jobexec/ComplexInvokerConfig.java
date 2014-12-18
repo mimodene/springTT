@@ -36,9 +36,8 @@ public class ComplexInvokerConfig {
     public CronTriggerFactoryBean cronTrigger() {
         CronTriggerFactoryBean trigger = new CronTriggerFactoryBean();
         trigger.setJobDetail(complexInvoking().getObject());
-        trigger.setCronExpression("* * * * * ?");
+        trigger.setCronExpression("*/10 * * * * ?");
         return trigger;
-
     }
 
     @Bean

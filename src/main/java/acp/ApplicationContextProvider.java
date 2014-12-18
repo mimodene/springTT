@@ -20,14 +20,13 @@ public class ApplicationContextProvider implements ApplicationContextAware {
         }
     }
 
-    public synchronized static ApplicationContext getApplicationContext(Class...classList) {
+    public synchronized static ApplicationContext getApplicationContext(Class... classList) {
         if (ctx == null) {
             ctx = new AnnotationConfigApplicationContext(classList);
         }
         return ctx;
 
     }
-
 
     public synchronized static ApplicationContext getApplicationContext() {
         return ctx;

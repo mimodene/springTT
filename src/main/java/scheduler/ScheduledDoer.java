@@ -14,38 +14,34 @@ public class ScheduledDoer implements ApplicationListener<ContextClosedEvent> {
 
     private long lastTime = System.currentTimeMillis();
     private long lastDoSmtElse = System.currentTimeMillis();
-
     private Controller cont = new Controller();
 
     @Scheduled(cron = "*/2 * * * * ?")
     public void showTimer() {
-
-        if(cont.status==0) {
+        if (cont.status == 0) {
             System.out.println("showTimer, no action, status = 0 " + (System.currentTimeMillis() - lastTime));
-        }else{
+        } else {
             System.out.println(" showTimer, doing some funny things here, status <> 0 " + (System.currentTimeMillis() - lastTime));
         }
-
         lastTime = System.currentTimeMillis();
         throw new RuntimeException();
-
     }
+
     @Scheduled(cron = "*/5 * * * * ?")
     public void doSomethingElse() {
-        if(cont.status==0) {
+        if (cont.status == 0) {
             System.out.println("doSomethingElse no action, status = 0  " + (System.currentTimeMillis() - lastDoSmtElse));
-        }else{
+        } else {
             System.out.println("doSomethingElse, doing some funny things here, status <> 0 " + (System.currentTimeMillis() - lastDoSmtElse));
         }
         lastTime = System.currentTimeMillis();
-
     }
 
     @Override
     public void onApplicationEvent(final ContextClosedEvent contextClosedEvent) {
         ApplicationContext con = contextClosedEvent.getApplicationContext();
         System.out.println("------AppContext to close, cleanup start ::");
-        cont.status=1;
+        cont.status = 1;
         try {
             Thread.sleep(6000);
         } catch (InterruptedException e) {
@@ -54,12 +50,11 @@ public class ScheduledDoer implements ApplicationListener<ContextClosedEvent> {
         System.out.println("------Cleanup end");
     }
 
-
-    public void setController(Controller theCont){
+    public void setController(Controller theCont) {
         this.cont = theCont;
     }
 
-    public Controller getController(){
+    public Controller getController() {
         return cont;
     }
 }

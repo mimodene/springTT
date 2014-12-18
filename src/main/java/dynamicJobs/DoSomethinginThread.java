@@ -8,22 +8,20 @@ import org.springframework.core.task.TaskExecutor;
 
 public class DoSomethinginThread {
 
-        private TaskExecutor taskExecutor;
-        private JobDoSomething classWithMethodToFire;
+    private TaskExecutor taskExecutor;
+    private JobDoSomething classWithMethodToFire;
 
-        public DoSomethinginThread(TaskExecutor taskExecutor,
-                                   JobDoSomething classWithMethodToFire) {
-            this.taskExecutor = taskExecutor;
-            this.classWithMethodToFire = classWithMethodToFire;
-        }
+    public DoSomethinginThread(TaskExecutor taskExecutor, JobDoSomething classWithMethodToFire) {
+        this.taskExecutor = taskExecutor;
+        this.classWithMethodToFire = classWithMethodToFire;
+    }
 
-        public void fire(final SomeParameterClass parameter) {
-            taskExecutor.execute( new Runnable() {
-                public void run() {
-                    classWithMethodToFire.doSomething( parameter );
-                }
-            });
-        }
-
+    public void fire(final SomeParameterClass parameter) {
+        taskExecutor.execute(new Runnable() {
+            public void run() {
+                classWithMethodToFire.doSomething(parameter);
+            }
+        });
+    }
 
 }

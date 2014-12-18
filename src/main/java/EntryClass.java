@@ -12,16 +12,12 @@ import org.springframework.context.ApplicationContext;
 public class EntryClass {
 
     public void go() {
-
         ApplicationContext ctx = ApplicationContextProvider.getApplicationContext();
         Dosomething myService = ctx.getBean(Doer.class);
         myService.go();
         Dosomething notdoer = ctx.getBean(NotDoer.class);
         notdoer.go();
-
         AutowiredClass auto = ctx.getBean(AutowiredClass.class);
         auto.go();
-
     }
-
 }

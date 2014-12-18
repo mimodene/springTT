@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
  */
 
 @Component
-public class NotDoer implements Dosomething  , ApplicationListener<ContextClosedEvent> {
+public class NotDoer implements Dosomething, ApplicationListener<ContextClosedEvent> {
 
     @Override
     public void go() {
