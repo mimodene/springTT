@@ -12,8 +12,9 @@ public interface StatusAggregator {
     public static final int STOPPING = 4;
     public static final int STARTING = 5;
 
-    public void getStatus();
+    public int getStatus();
 
     public void setStatusTo(int theNewStatus);
+
 
 }

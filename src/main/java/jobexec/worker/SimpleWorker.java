@@ -31,6 +31,7 @@ public class SimpleWorker extends QuartzJobBean implements Worker {
 
     @Override
     protected void executeInternal(final JobExecutionContext jobExecutionContext) throws JobExecutionException {
+
         String threadId = jobExecutionContext.getMergedJobDataMap().getString("threadId");
         System.out.println("ThreadId = " + threadId + " Say something with name: " + name + " counter: " + counter++ + " lastcheck :" + (System.currentTimeMillis() - lastcheck));
         lastcheck = System.currentTimeMillis();

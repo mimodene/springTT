@@ -1,11 +1,13 @@
 package gui;
 
 import acp.ApplicationContextProvider;
+import org.quartz.JobExecutionContext;
 import org.quartz.SchedulerException;
 import org.quartz.impl.StdScheduler;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import javax.swing.*;
+import java.util.List;
 
 /**
  * Created by MMO on 18.12.2014.
@@ -85,12 +87,19 @@ public class MainFrame extends JFrame {
 
     private void stopExecution(java.awt.event.ActionEvent evt) {
         AnnotationConfigApplicationContext ac = (AnnotationConfigApplicationContext) ApplicationContextProvider.getApplicationContext();
-        StdScheduler bean = (StdScheduler) ac.getBean("schedulerComplexFactoryBean");
+        StdScheduler bean = (StdScheduler) ac.getBean("parallelSchedulerFactoryBean");
         try {
             bean.pauseAll();
+
         } catch (SchedulerException e) {
             e.printStackTrace();
         }
+        List<JobExecutionContext> allJobs = bean.getCurrentlyExecutingJobs();
+
+        for (JobExecutionContext job : allJobs) {
+            goLabel.setText(job.getNextFireTime().toString());
+        }
+
         startButton.setEnabled(true);
         stopButton.setEnabled(false);
 
@@ -98,12 +107,21 @@ public class MainFrame extends JFrame {
 
     private void startExecution(java.awt.event.ActionEvent evt) {
         AnnotationConfigApplicationContext ac = (AnnotationConfigApplicationContext) ApplicationContextProvider.getApplicationContext();
-        StdScheduler bean = (StdScheduler) ac.getBean("schedulerComplexFactoryBean");
+        StdScheduler bean = (StdScheduler) ac.getBean("parallelSchedulerFactoryBean");
         try {
             bean.resumeAll();
         } catch (SchedulerException e) {
             e.printStackTrace();
         }
+
+        List<JobExecutionContext> allJobs = bean.getCurrentlyExecutingJobs();
+
+        for (JobExecutionContext job : allJobs) {
+            goLabel.setText(job.getNextFireTime().toString());
+        }
+
+
+
         startButton.setEnabled(false);
         stopButton.setEnabled(true);
 
