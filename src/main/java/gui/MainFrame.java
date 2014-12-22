@@ -1,6 +1,7 @@
 package gui;
 
 import acp.ApplicationContextProvider;
+import ipcJobExecution.IPCExecutorImpl;
 import org.quartz.JobExecutionContext;
 import org.quartz.SchedulerException;
 import org.quartz.impl.StdScheduler;
@@ -86,19 +87,10 @@ public class MainFrame extends JFrame {
     }
 
     private void stopExecution(java.awt.event.ActionEvent evt) {
-        AnnotationConfigApplicationContext ac = (AnnotationConfigApplicationContext) ApplicationContextProvider.getApplicationContext();
-        StdScheduler bean = (StdScheduler) ac.getBean("parallelSchedulerFactoryBean");
-        try {
-            bean.pauseAll();
+        AnnotationConfigApplicationContext ctx = (AnnotationConfigApplicationContext) ApplicationContextProvider.getApplicationContext();
+        IPCExecutorImpl bean = (IPCExecutorImpl) ctx.getBean("firstScheduler");
 
-        } catch (SchedulerException e) {
-            e.printStackTrace();
-        }
-        List<JobExecutionContext> allJobs = bean.getCurrentlyExecutingJobs();
-
-        for (JobExecutionContext job : allJobs) {
-            goLabel.setText(job.getNextFireTime().toString());
-        }
+        bean.stop();
 
         startButton.setEnabled(true);
         stopButton.setEnabled(false);
@@ -119,8 +111,6 @@ public class MainFrame extends JFrame {
         for (JobExecutionContext job : allJobs) {
             goLabel.setText(job.getNextFireTime().toString());
         }
-
-
 
         startButton.setEnabled(false);
         stopButton.setEnabled(true);

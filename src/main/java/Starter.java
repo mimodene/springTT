@@ -4,7 +4,9 @@ import config.Doer;
 import config.Dosomething;
 import config.NotDoer;
 import gui.MainFrame;
-import jobexec.PureQuartzConfig;
+import ipcJobExecution.IPCExecutorImpl;
+import ipcJobExecution.JobExecConfig;
+import org.quartz.SchedulerException;
 import org.springframework.context.ApplicationContext;
 import scheduler.ScheduledDoer;
 
@@ -29,13 +31,25 @@ public class Starter {
     }
 
     private void go() {
-        ApplicationContext ctx = ApplicationContextProvider.getApplicationContext(PureQuartzConfig.class);
+        ApplicationContext ctx = ApplicationContextProvider.getApplicationContext(JobExecConfig.class);
 
-        testParallel();
+        testProgramatic(ctx);
+        //   testParallel();
         //   testBasic(ctx);
         //   testDynamic(ctx);
         //   testAddRemove();
-//        ((ConfigurableApplicationContext) ctx).close();
+        // ((ConfigurableApplicationContext) ctx).close();
+    }
+
+    private void testProgramatic(final ApplicationContext ctx) {
+
+        IPCExecutorImpl impl = (IPCExecutorImpl) ctx.getBean("firstScheduler");
+        try {
+            impl.start();
+        } catch (SchedulerException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void testParallel() {

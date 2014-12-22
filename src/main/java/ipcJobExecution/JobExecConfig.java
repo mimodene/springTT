@@ -1,5 +1,8 @@
 package ipcJobExecution;
 
+import ipcJobExecution.IPCExecutorImpl.IPCExecutorBuilder;
+import ipcJobExecution.helper.DefaultThreadIdGenerator;
+import jobexec.worker.SimpleWorker;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -9,21 +12,20 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class JobExecConfig {
 
-        @Bean
-        public IPCExecutor firstScheduler() {
-            IPCExecutor exec = new IPCExecutorImpl();
-            exec.setStatusAggregator(new StatusAggregatorImpl());
-            return exec;
-        }
+    @Bean
+    public IPCExecutorImpl firstScheduler() {
 
+        IPCExecutorBuilder builder = new IPCExecutorBuilder();
 
-    //    private ThreadPoolTaskExecutor getPool(int maxPoolSize, int corPoolSize, String beanName) {
-    //        ThreadPoolTaskExecutor springExec = new ThreadPoolTaskExecutor();
-    //        springExec.setBeanName(beanName);
-    //        springExec.setWaitForTasksToCompleteOnShutdown(true);
-    //        springExec.setCorePoolSize(corPoolSize);
-    //        springExec.setMaxPoolSize(maxPoolSize);
-    //        return springExec;
-    //    }
+        IPCExecutorImpl exec = builder.setCronString(null)
+                                      .setWorkerclass(SimpleWorker.class)
+                                      .setParallelThreads(2)
+                                      .setPauseTimeInSeconds(1)
+                                      .setStartDayInSeconds(0)
+                                      .setIdGenerator(new DefaultThreadIdGenerator())
+                                      .setGroupName("MessagePrints")
+                                      .build();
+        return exec;
+    }
 
 }
