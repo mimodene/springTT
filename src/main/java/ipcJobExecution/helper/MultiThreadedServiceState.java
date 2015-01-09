@@ -6,31 +6,33 @@ import java.util.List;
  * Created by MMO on 22.12.2014.
  */
 public interface MultiThreadedServiceState {
+    void putServiceState(Object theKey, ServiceState theServiceState);
+
     void setNumberOfThreads(int numberOfThreads);
 
     int getNumberOfThreads();
 
     List<ServiceState> getThreadServiceStates();
 
-    void setProcessing(int threadId, boolean processing);
+    void setProcessing(Object threadId, boolean processing);
 
-    void setShutdown(int threadId, boolean shutdown);
+    void setShutdown(Object threadId, boolean shutdown);
 
-    boolean isRunning(int threadId);
+    boolean isRunning(Object threadId);
 
-    boolean isStopRequested(int threadId);
+    boolean isStopRequested(Object threadId);
 
-    boolean isResetRequested(int threadId);
+    boolean isResetRequested(Object threadId);
 
     void setAllRunning(boolean running);
 
-    long getLastProcessTime(int threadId);
+    long getLastProcessTime(Object threadId);
 
-    void setLastProcessTime(int threadId, long lastProcessTime);
+    void setLastProcessTime(Object threadId, long lastProcessTime);
 
-    long getNextExecution(int threadId);
+    long getNextExecution(Object threadId);
 
-    void setNextExecution(int threadId, long nextExecution);
+    void setNextExecution(Object threadId, long nextExecution);
 
     boolean allThreadsStopped();
 
@@ -46,5 +48,5 @@ public interface MultiThreadedServiceState {
 
     long getNextExecution();
 
-    public ServiceState getServiceState(int threadId);
+    void reset();
 }

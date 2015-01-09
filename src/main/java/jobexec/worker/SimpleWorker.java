@@ -1,5 +1,6 @@
 package jobexec.worker;
 
+import ipcJobExecution.helper.ServiceState;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -37,14 +38,19 @@ public class SimpleWorker extends QuartzJobBean implements Worker {
     protected void executeInternal(final JobExecutionContext jobExecutionContext) throws JobExecutionException {
         String threadId = jobExecutionContext.getMergedJobDataMap().getString("threadId");
 
+        ServiceState state = (ServiceState) jobExecutionContext.getMergedJobDataMap().get("state");
+
+        System.out.println("state: " + state.getLastProcessTime() + " state id: " + state.toString());
         System.out.println(" ThreadId = " + threadId + "   Call entry time : " + new Date());
+        long counter = state.getLastProcessTime();
+
         lastcheck = System.currentTimeMillis();
 
         int threadsleeper = Integer.valueOf(threadId);
 
         int sleep;
         if (threadId.equals("0")) {
-            sleep = 12000;
+            sleep = 10000;
         } else {
             sleep = threadsleeper * 10000;
         }
@@ -55,7 +61,12 @@ public class SimpleWorker extends QuartzJobBean implements Worker {
             e.printStackTrace();
         }
 
-        System.out.println(" ThreadId = " + threadId + "   Next fire time: " + jobExecutionContext.getTrigger().getFireTimeAfter(new Date()));
+        if (state.getLastProcessTime() == counter) {
+            state.setLastProcessTime(counter + 1);
+        } else {
+            System.out.println("counter has been reset to " + state.getLastProcessTime());
+        }
+        System.out.println(" ThreadId = " + threadId + "   Next real fire time: " + jobExecutionContext.getTrigger().getFireTimeAfter(new Date()) + " next hypo firetime : " + jobExecutionContext.getTrigger().getNextFireTime());
 
     }
 }

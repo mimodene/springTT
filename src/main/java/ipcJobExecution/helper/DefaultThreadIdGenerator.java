@@ -15,6 +15,5 @@ public class DefaultThreadIdGenerator implements ThreadIdGenerator {
 
     public synchronized void resetId(){
         id=0;
-
     }
 }

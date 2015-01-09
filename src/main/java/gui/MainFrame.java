@@ -90,7 +90,7 @@ public class MainFrame extends JFrame {
         AnnotationConfigApplicationContext ctx = (AnnotationConfigApplicationContext) ApplicationContextProvider.getApplicationContext();
         IPCExecutorImpl bean = (IPCExecutorImpl) ctx.getBean("firstScheduler");
 
-        bean.stop();
+        bean.reset();
 
         startButton.setEnabled(true);
         stopButton.setEnabled(false);

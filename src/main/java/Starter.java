@@ -33,7 +33,7 @@ public class Starter {
     private void go() {
         ApplicationContext ctx = ApplicationContextProvider.getApplicationContext(JobExecConfig.class);
 
-        testProgramatic(ctx);
+        testProgrammatic(ctx);
         //   testParallel();
         //   testBasic(ctx);
         //   testDynamic(ctx);
@@ -41,7 +41,7 @@ public class Starter {
         // ((ConfigurableApplicationContext) ctx).close();
     }
 
-    private void testProgramatic(final ApplicationContext ctx) {
+    private void testProgrammatic(final ApplicationContext ctx) {
 
         IPCExecutorImpl impl = (IPCExecutorImpl) ctx.getBean("firstScheduler");
         try {
@@ -71,10 +71,8 @@ public class Starter {
     }
 
     private void testDynamic(ApplicationContext ctx) {
-
         ScheduledDoer doer = ctx.getBean(ScheduledDoer.class);
         doer.getController().status = 1;
-
         doer.getController().status = 0;
 
     }

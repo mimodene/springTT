@@ -93,12 +93,13 @@ public class ServiceState implements Serializable {
         this.command = CMD_NONE;
     }
 
-    public long getLastProcessTime() {
+    public synchronized long getLastProcessTime() {
         return lastProcessTime;
     }
 
-    public void setLastProcessTime(long lastProcessTime) {
-        this.lastProcessTime = lastProcessTime;
+    public synchronized void setLastProcessTime(long lpt) {
+        System.out.println("set last process time : " + toString() +" to "+lpt);
+        this.lastProcessTime = lpt;
     }
 
     public long getNextExecution() {

@@ -1,8 +1,9 @@
 package ipcJobExecution;
 
 import ipcJobExecution.helper.DefaultThreadIdGenerator;
-import ipcJobExecution.helper.MultiThreadedServiceState;
-import ipcJobExecution.helper.MultiThreadedServiceStateImpl;
+import ipcJobExecution.helper.ServiceState;
+import ipcJobExecution.helper.ServiceStateHolder;
+import ipcJobExecution.helper.SimpleTriggerListener;
 import ipcJobExecution.helper.ThreadIdGenerator;
 import jobexec.worker.SimpleWorker;
 import org.quartz.CronScheduleBuilder;
@@ -19,6 +20,7 @@ import org.quartz.Trigger;
 import org.quartz.impl.StdSchedulerFactory;
 
 import java.util.Date;
+import java.util.Map;
 
 import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
 import static org.quartz.TriggerBuilder.newTrigger;
@@ -26,7 +28,9 @@ import static org.quartz.TriggerBuilder.newTrigger;
 /**
  * Created by MMO on 16.12.2014.
  */
-public class IPCExecutorImpl {
+public class IPCExecutorImpl implements IPCExecutorT {
+
+
 
     private Class<? extends Job> workerclass;
     private String methodToCall;
@@ -49,7 +53,7 @@ public class IPCExecutorImpl {
     private Scheduler scheduler;
     private String id;
 
-    private MultiThreadedServiceState serviceState;
+    private ServiceStateHolder serviceStates;
 
     public IPCExecutorImpl(final IPCExecutorBuilder ipcExecutorBuilder) {
         this.workerclass = ipcExecutorBuilder.workerclass;
@@ -62,14 +66,15 @@ public class IPCExecutorImpl {
         this.idGenerator = ipcExecutorBuilder.idGenerator;
         this.groupName = ipcExecutorBuilder.groupName;
         this.serviceName = ipcExecutorBuilder.serviceName;
-
-        serviceState = new MultiThreadedServiceStateImpl();
-
+        serviceStates = new ServiceStateHolder();
+        serviceStates.setNumberOfThreads(this.parallelThreads);
     }
 
+    @Override
     public void buildExecutor() throws SchedulerException {
         SchedulerFactory sf = new StdSchedulerFactory();
         scheduler = sf.getScheduler();
+
         if (idGenerator == null) {
             idGenerator = new DefaultThreadIdGenerator();
         }
@@ -81,36 +86,40 @@ public class IPCExecutorImpl {
             }
 
             ScheduleBuilder schedulBuilder = getScheduleBuilder();
-
             Trigger trigger = getTrigger(nextId, schedulBuilder);
 
+            ServiceState state = new ServiceState();
+            JobDataMap jobdatamap = new JobDataMap();
+
+            jobdatamap.put("state",state);
+
             JobKey jobKey = new JobKey("Job_" + nextId, groupName);
-
-            JobDetail jobDetail = getJobDetail(jobKey);
-
-            //            JobDataMap jobdatamap = new JobDataMap();
-            //            jobdatamap.put("threadId", nextId);
-
+            JobDetail jobDetail = getJobDetail(jobKey,jobdatamap);
+            serviceStates.putServiceState("test"+i,state);
             scheduler.scheduleJob(jobDetail, trigger);
-
+            scheduler.getListenerManager().addTriggerListener(new SimpleTriggerListener());
         }
     }
 
-    private JobDetail getJobDetail(final JobKey jobKey) {
+    private JobDetail getJobDetail(final JobKey jobKey,JobDataMap jobDataMap) {
         return JobBuilder.newJob(SimpleWorker.class)
+                .usingJobData(jobDataMap)
                          .withIdentity(jobKey).build();
     }
 
     private ScheduleBuilder getScheduleBuilder() {
         ScheduleBuilder schedulBuilder;
+
+
         if (cronString == null) {
             schedulBuilder = simpleSchedule()
                     .withMisfireHandlingInstructionNextWithExistingCount()
                     .withIntervalInSeconds(pauseTimeInSeconds)
                     .repeatForever();
         } else {
-            schedulBuilder = CronScheduleBuilder.cronSchedule(cronString);
+            schedulBuilder = CronScheduleBuilder.cronSchedule(cronString).withMisfireHandlingInstructionIgnoreMisfires();
         }
+
         return schedulBuilder;
     }
 
@@ -125,11 +134,14 @@ public class IPCExecutorImpl {
         return trigger;
     }
 
+    @Override
     public void start() throws SchedulerException {
         scheduler.start();
     }
 
+    @Override
     public void stop() {
+
         try {
             scheduler.pauseAll();
         } catch (SchedulerException e) {
@@ -137,8 +149,14 @@ public class IPCExecutorImpl {
         }
     }
 
+    @Override
     public void reset() {
+        serviceStates.reset();
+    }
 
+    @Override
+    public Map<Object, ServiceState> getServiceStates() {
+        return null;
     }
 
     public static class IPCExecutorBuilder {
@@ -227,6 +245,7 @@ public class IPCExecutorImpl {
             this.serviceName = serviceName;
             return this;
         }
+
 
         public IPCExecutorImpl build() {
             IPCExecutorImpl ret = new IPCExecutorImpl(this);
